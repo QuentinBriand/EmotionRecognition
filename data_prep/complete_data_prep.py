@@ -2,18 +2,20 @@ import os
 import zipfile
 import requests
 
-url = "https://www.kaggle.com/api/v1/datasets/download/msambare/fer2013"
-output_path = "./fer2013.zip"
+if not os.path.exists('./fer2013'):
+    if not os.path.exists('./fer2013.zip'):
+        url = "https://www.kaggle.com/api/v1/datasets/download/msambare/fer2013"
+        output_path = "./fer2013.zip"
 
-response = requests.get(url, allow_redirects=True)
-response.raise_for_status()
+        response = requests.get(url, allow_redirects=True)
+        response.raise_for_status()
 
-with open(output_path, 'wb') as f:
-    f.write(response.content)
+        with open(output_path, 'wb') as f:
+            f.write(response.content)
 
-os.mkdir('fer2013')
-with zipfile.ZipFile(output_path, 'r') as zip_ref:
-    zip_ref.extractall('./fer2013')
+    os.mkdir('./fer2013')
+    with zipfile.ZipFile(output_path, 'r') as zip_ref:
+        zip_ref.extractall('./fer2013')
 
 import torch
 import random
@@ -122,4 +124,4 @@ def visualize_dataset(old_dataset, new_dataset, num_samples=5):
     plt.tight_layout()
     plt.show()
 
-visualize_dataset(train_dataset, train_dataset_aug, 5)
+# visualize_dataset(train_dataset, train_dataset_aug, 5)

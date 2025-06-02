@@ -194,3 +194,4 @@ cython_debug/
 .cursorindexingignore
 
 *.zip
+**/fer2013
