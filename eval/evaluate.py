@@ -199,3 +199,6 @@ def plot_classification_metrics(metrics: Dict[str, Dict[str, float]], class_name
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class_names = test_dataset.classes
+
+#metrics = evaluate_model(dummy_model, test_loader, device, test_dataset.classes)
+# plot_classification_metrics(metrics, test_dataset.classes)
