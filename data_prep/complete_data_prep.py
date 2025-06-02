@@ -1,9 +1,14 @@
 import os
 import zipfile
 import requests
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 if not os.path.exists('./fer2013'):
     if not os.path.exists('./fer2013.zip'):
+        logger.info("FER2013 dataset not found. Downloading...")
         url = "https://www.kaggle.com/api/v1/datasets/download/msambare/fer2013"
         output_path = "./fer2013.zip"
 
@@ -13,6 +18,7 @@ if not os.path.exists('./fer2013'):
         with open(output_path, 'wb') as f:
             f.write(response.content)
 
+    logger.info("Download complete. Extracting dataset...")
     os.mkdir('./fer2013')
     with zipfile.ZipFile(output_path, 'r') as zip_ref:
         zip_ref.extractall('./fer2013')
@@ -83,21 +89,21 @@ concatenated_train_dataset = torch.utils.data.ConcatDataset([train_dataset, trai
 train_loader = torch.utils.data.DataLoader(concatenated_train_dataset, batch_size=32, shuffle=True)
 test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=32, shuffle=False)
 
-print(f"Train dataset:")
+logger.info(f"Train dataset:")
 for c in train_dataset.classes:
     c_idx = train_dataset.class_to_idx[c]
     count = np.count_nonzero(np.array(train_dataset.targets) == c_idx)
     count_aug = np.count_nonzero(np.array(train_dataset_aug.targets) == c_idx)
     print(f"\tLoaded {count:<5} samples of {c:<8}({c_idx}) | With Augmentation: {count + count_aug}")
 
-print(f"Test dataset:")
+logger.info(f"Test dataset:")
 for c in test_dataset.classes:
     c_idx = test_dataset.class_to_idx[c]
     count = np.count_nonzero(np.array(test_dataset.targets) == c_idx)
-    print(f"\tLoaded {count:<5} samples of {c:<8}({c_idx})")
+    logger.info(f"\tLoaded {count:<5} samples of {c:<8}({c_idx})")
 
 def visualize_dataset(old_dataset, new_dataset, num_samples=5):
-    print(f"Visualizing {num_samples} samples from the dataset:")
+    logger.info(f"Visualizing {num_samples} samples from the dataset:")
     random_indices = np.random.choice(len(new_dataset), num_samples, replace=False)
 
     _, axes = plt.subplots(2, num_samples, figsize=(15, 5))
